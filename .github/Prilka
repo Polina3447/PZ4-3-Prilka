@@ -1,3 +1,5 @@
+#https://github.com/Polina3447/PZ4-3-Prilka/tree/main/.github
+
 import sys
 import os
 from PyQt6.QtWidgets import (
@@ -5,6 +7,7 @@ from PyQt6.QtWidgets import (
     QPushButton, QFileDialog, QTextEdit, QLabel, QLineEdit, QTabWidget
 )
 
+#Сканирование папки
 class FileScanner(QWidget):
     def __init__(self):
         super().__init__()
@@ -32,6 +35,7 @@ class FileScanner(QWidget):
         else:
             self.file_list.setPlainText("Папка не найдена.")
 
+#Редактирование файла
 class TextFileEditor(QWidget):
     def __init__(self):
         super().__init__()
@@ -62,7 +66,8 @@ class TextFileEditor(QWidget):
         if file_path:
             with open(file_path, 'w', encoding='utf-8') as file:
                 file.write(self.text_edit.toPlainText())
-
+                
+#Сохранение в папку
 class SaveToFolder(QWidget):
     def __init__(self):
         super().__init__()
@@ -99,6 +104,7 @@ class SaveToFolder(QWidget):
         else:
             self.text_edit.setPlainText("Папка не найдена.")
 
+#Форма данных
 class DataForm(QWidget):
     def __init__(self):
         super().__init__()
@@ -175,6 +181,7 @@ class DataForm(QWidget):
         else:
             self.key1.setPlainText("Путь к файлу не указан.")
 
+#Чтение из файла
 class ReadFromFile(QWidget):
     def __init__(self):
         super().__init__()
@@ -203,7 +210,6 @@ class ReadFromFile(QWidget):
                 self.result_text.clear()
                 self.result_text.append(f"Количество элементов: {count}\n")
                 if count > 1:
-                    # Извлечение второго поля
                     second_line = lines[1].strip().split(',')
                     if len(second_line) >= 3:
                         key = second_line[1].strip()
@@ -216,6 +222,7 @@ class ReadFromFile(QWidget):
         else:
             self.result_text.setPlainText("Файл не найден.")
 
+#Главное окно
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
