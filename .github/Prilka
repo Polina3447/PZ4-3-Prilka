@@ -1,0 +1,238 @@
+import sys
+import os
+from PyQt6.QtWidgets import (
+    QApplication, QMainWindow, QWidget, QVBoxLayout,
+    QPushButton, QFileDialog, QTextEdit, QLabel, QLineEdit, QTabWidget
+)
+
+class FileScanner(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+
+        self.folder_path = QLineEdit(self)
+        self.folder_path.setPlaceholderText("Введите путь к папке...")
+        self.scan_button = QPushButton("Сканировать папку", self)
+        self.scan_button.clicked.connect(self.scan_folder)
+        self.file_list = QTextEdit(self)
+        self.file_list.setReadOnly(True)
+
+        self.layout.addWidget(QLabel("Путь к папке:"))
+        self.layout.addWidget(self.folder_path)
+        self.layout.addWidget(self.scan_button)
+        self.layout.addWidget(QLabel("Список файлов:"))
+        self.layout.addWidget(self.file_list)
+
+    def scan_folder(self):
+        path = self.folder_path.text()
+        if os.path.isdir(path):
+            files = os.listdir(path)
+            self.file_list.setPlainText("\n".join(files))
+        else:
+            self.file_list.setPlainText("Папка не найдена.")
+
+class TextFileEditor(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+
+        self.text_edit = QTextEdit(self)
+        self.load_button = QPushButton("Загрузить текстовый файл", self)
+        self.save_button = QPushButton("Сохранить текстовый файл", self)
+
+        self.load_button.clicked.connect(self.load_file)
+        self.save_button.clicked.connect(self.save_file)
+
+        self.layout.addWidget(self.text_edit)
+        self.layout.addWidget(self.load_button)
+        self.layout.addWidget(self.save_button)
+
+    def load_file(self):
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getOpenFileName(self, "Открыть текстовый файл", "", "Text Files (*.txt);;All Files (*)", options=options)
+        if file_path:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                self.text_edit.setPlainText(file.read())
+
+    def save_file(self):
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(self, "Сохранить текстовый файл", "", "Text Files (*.txt);;All Files (*)", options=options)
+        if file_path:
+            with open(file_path, 'w', encoding='utf-8') as file:
+                file.write(self.text_edit.toPlainText())
+
+class SaveToFolder(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+
+        self.text_edit = QTextEdit(self)
+        self.folder_path = QLineEdit(self)
+        self.folder_path.setPlaceholderText("Введите путь к папке для сохранения...")
+        self.save_button = QPushButton("Сохранить текстовый файл в папку", self)
+        self.select_folder_button = QPushButton("Выбрать папку", self)
+
+        self.select_folder_button.clicked.connect(self.select_folder)
+        self.save_button.clicked.connect(self.save_to_folder)
+
+        self.layout.addWidget(self.text_edit)
+        self.layout.addWidget(self.folder_path)
+        self.layout.addWidget(self.select_folder_button)
+        self.layout.addWidget(self.save_button)
+
+    def select_folder(self):
+        options = QFileDialog.Options()
+        folder_path = QFileDialog.getExistingDirectory(self, "Выбрать папку", options=options)
+        if folder_path:
+            self.folder_path.setText(folder_path)
+
+    def save_to_folder(self):
+        folder_path = self.folder_path.text()
+        if os.path.isdir(folder_path):
+            file_name, _ = QFileDialog.getSaveFileName(self, "Сохранить текстовый файл", folder_path, "Text Files (*.txt);;All Files (*)")
+            if file_name:
+                with open(file_name, 'w', encoding='utf-8') as file:
+                    file.write(self.text_edit.toPlainText())
+        else:
+            self.text_edit.setPlainText("Папка не найдена.")
+
+class DataForm(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+
+        self.key1 = QLineEdit(self)
+        self.key1.setPlaceholderText("Ключ 1")
+        self.value1 = QLineEdit(self)
+        self.value1.setPlaceholderText("Значение 1")
+
+        self.key2 = QLineEdit(self)
+        self.key2.setPlaceholderText("Ключ 2")
+        self.value2 = QLineEdit(self)
+        self.value2.setPlaceholderText("Значение 2")
+
+        self.key3 = QLineEdit(self)
+        self.key3.setPlaceholderText("Ключ 3")
+        self.value3 = QLineEdit(self)
+        self.value3.setPlaceholderText("Значение 3")
+
+        self.key4 = QLineEdit(self)
+        self.key4.setPlaceholderText("Ключ 4")
+        self.value4 = QLineEdit(self)
+        self.value4.setPlaceholderText("Значение 4")
+
+        self.key5 = QLineEdit(self)
+        self.key5.setPlaceholderText("Ключ 5")
+        self.value5 = QLineEdit(self)
+        self.value5.setPlaceholderText("Значение 5")
+
+        self.file_path = QLineEdit(self)
+        self.file_path.setPlaceholderText("Введите путь к файлу для сохранения...")
+        self.save_button = QPushButton("Сохранить данные", self)
+        self.select_file_button = QPushButton("Выбрать файл", self)
+
+        self.select_file_button.clicked.connect(self.select_file)
+        self.save_button.clicked.connect(self.save_data)
+
+        self.layout.addWidget(self.value1)
+        self.layout.addWidget(self.key2)
+        self.layout.addWidget(self.value2)
+        self.layout.addWidget(self.key3)
+        self.layout.addWidget(self.value3)
+        self.layout.addWidget(self.key4)
+        self.layout.addWidget(self.value4)
+        self.layout.addWidget(self.key5)
+        self.layout.addWidget(self.value5)
+        self.layout.addWidget(self.file_path)
+        self.layout.addWidget(self.select_file_button)
+        self.layout.addWidget(self.save_button)
+
+    def select_file(self):
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(self, "Выбрать файл для сохранения", "", "Text Files (*.txt);;All Files (*)", options=options)
+        if file_path:
+            self.file_path.setText(file_path)
+
+    def save_data(self):
+        file_path = self.file_path.text()
+        if file_path:
+            data = [
+                (1, self.key1.text(), self.value1.text()),
+                (2, self.key2.text(), self.value2.text()),
+                (3, self.key3.text(), self.value3.text()),
+                (4, self.key4.text(), self.value4.text()),
+                (5, self.key5.text(), self.value5.text()),
+            ]
+            with open(file_path, 'a', encoding='utf-8') as file:
+                for item in data:
+                    if item[1] and item[2]:
+                        # Проверка, что ключ и значение не пустые
+                        file.write(f"{item[0]}, {item[1]}, {item[2]}\n")
+        else:
+            self.key1.setPlainText("Путь к файлу не указан.")
+
+class ReadFromFile(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+
+        self.file_path = QLineEdit(self)
+        self.file_path.setPlaceholderText("Введите путь к файлу для чтения...")
+        self.read_button = QPushButton("Читать файл", self)
+        self.result_text = QTextEdit(self)
+        self.result_text.setReadOnly(True)
+
+        self.read_button.clicked.connect(self.read_file)
+
+        self.layout.addWidget(self.file_path)
+        self.layout.addWidget(self.read_button)
+        self.layout.addWidget(QLabel("Результат:"))
+        self.layout.addWidget(self.result_text)
+
+    def read_file(self):
+        file_path = self.file_path.text()
+        if os.path.isfile(file_path):
+            with open(file_path, 'r', encoding='utf-8') as file:
+                lines = file.readlines()
+                count = len(lines)
+                self.result_text.clear()
+                self.result_text.append(f"Количество элементов: {count}\n")
+                if count > 1:
+                    # Извлечение второго поля
+                    second_line = lines[1].strip().split(',')
+                    if len(second_line) >= 3:
+                        key = second_line[1].strip()
+                        value = second_line[2].strip()
+                        self.result_text.append(f"Поле 2 - *{key}* ~ *{value}*")
+                    else:
+                        self.result_text.append("Недостаточно данных во второй строке.")
+                else:
+                    self.result_text.append("Файл содержит менее двух строк.")
+        else:
+            self.result_text.setPlainText("Файл не найден.")
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Приложение на PyQt6")
+        self.setGeometry(100, 100, 600, 400)
+
+        self.tabs = QTabWidget()
+        self.setCentralWidget(self.tabs)
+
+        self.tabs.addTab(FileScanner(), "Сканирование папки")
+        self.tabs.addTab(TextFileEditor(), "Редактирование файла")
+        self.tabs.addTab(SaveToFolder(), "Сохранение в папку")
+        self.tabs.addTab(DataForm(), "Форма данных")
+        self.tabs.addTab(ReadFromFile(), "Чтение из файла")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    main_window = MainWindow()
+    main_window.show()
+    sys.exit(app.exec())
